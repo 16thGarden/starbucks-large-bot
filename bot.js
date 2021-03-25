@@ -3,9 +3,39 @@ const client = new Discord.Client();
 require('dotenv').config()
 
 const express = require("express");
+const fetch = require("node-fetch");
 const app = express();
 const port = process.env.PORT || 5000;
-app.listen(port, function() {});
+const dynoUrl = process.env.DYNO_URL
+
+const wakeUpDyno = (url, interval = 5, callback) => {
+    const milliseconds = interval * 60000;
+    setTimeout(() => {
+        try { 
+            console.log(`setTimeout called.`);
+            fetch(url).then(() => console.log(`Fetching ${url}.`)); 
+        }
+        catch (err) {
+            console.log(`Error fetching ${url}: ${err.message} 
+            Will try again in ${interval} minutes...`);
+        }
+        finally {
+            try {
+                callback();
+            }
+            catch (e) {
+                callback ? console.log("Callback failed: ", e.message) : null;
+            }
+            finally {
+                return wakeUpDyno(url, interval, callback);
+            }
+        }
+    }, milliseconds);
+};
+
+app.listen(port, function() {
+    wakeUpDyno(dynoUrl);
+});
 
 var curGuild = null;
 var curChannel = null;
