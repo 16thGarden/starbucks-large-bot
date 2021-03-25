@@ -2,30 +2,10 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 require('dotenv').config()
 
-const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-const colorChanger = {
-    reset: function() {
-        console.log("\x1b[0m");
-    },
-    setCyan: function() {
-        console.log("\x1b[36m");
-    },
-    setYellow: function() {
-        console.log("\x1b[33m");
-    },
-    setRed: function() {
-        console.log("\x1b[31m");
-    },
-    setGreen: function() {
-        console.log("\x1b[32m");
-    }
-}
-
-var showIncommingMessages = false;
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 5000;
+app.listen(port, function() {});
 
 var curGuild = null;
 var curChannel = null;
