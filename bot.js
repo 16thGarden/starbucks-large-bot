@@ -447,6 +447,12 @@ client.on("guildDelete", guild => {
         }
     });
     var message = "Left a Server: " + guild.name;
+
+    if (guild.id == curGuild.id) {
+        curGuild = null;
+        curChannel = null;
+        curVoiceChannel = null;
+    }
     
     embed = new Discord.MessageEmbed()
     .setColor("White")
