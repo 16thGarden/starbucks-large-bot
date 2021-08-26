@@ -101,6 +101,7 @@ client.on('message', msg => {
                                 notbins.push(auction)
                             }
                         });
+                        reply += "Player " + input[1] + " auctions:\n"
 
                         if (bins.length != 0) {
                             reply += "BIN:\n"
@@ -116,6 +117,10 @@ client.on('message', msg => {
                         notbins.forEach(auction => {
                             reply += auction.item_name + " (bid at " + auction.highest_bid_amount + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
                         })
+
+                        if (bins.length == 0 && notbins.length == 0) {
+                            reply = "No active autions!"
+                        }
 
                         msg.channel.send(reply);
                     });
