@@ -127,16 +127,18 @@ client.on('message', msg => {
                         });
                         replyTitle += "Player " + input[1] + " auctions:\n"
 
+                        var milliseconds = (new Date).getTime();
+
                         if (bins.length != 0) {
                             replyBody += "BIN:\n"
                         }
                         bins.forEach(auction => {
-                            replyBody += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold") + "\n"
+                            replyBody += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold")
+                            replyBody += (milliseconds > auction.end ? ", expired" : "") + "\n"
                         })
-                        var milliseconds
+
                         if (notbins.length != 0) {
                             replyBody += "AUCTIONS:\n"
-                            milliseconds = (new Date).getTime();
                         }
                         notbins.forEach(auction => {
                             replyBody += auction.item_name + " (bid at " + auction.highest_bid_amount + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
