@@ -56,7 +56,9 @@ client.on('message', msg => {
         input = input.split(" ");
 
         reply = ""
-        if (input[0] == "online") {
+        if (input[0] == "help") {
+            msg.channel.send("available commands:\nonline\nauctions")
+        } else if (input[0] == "online") {
             if (input.length < 2) {
                 reply = "invalid arguments!\nusage: s.online <ign>";
                 msg.channel.send(reply);
@@ -128,6 +130,8 @@ client.on('message', msg => {
                     msg.channel.send("Player " + input[1] + " not found!");
                 })
             }
+        } else {
+            msg.channel.send("unknown command, type s.help for help")
         }
     }
 
