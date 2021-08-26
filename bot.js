@@ -145,6 +145,13 @@ client.on('message', msg => {
                         if (bins.length == 0 && notbins.length == 0) {
                             replyBody += "No active autions!"
                         }
+
+                        reply = new Discord.MessageEmbed()
+                        .addFields({
+                            name: replyTitle,
+                            value: replyBody
+                        });
+                        msg.channel.send(reply)
                     });
                 })
                 .catch((error) => {
@@ -156,7 +163,6 @@ client.on('message', msg => {
                         name: replyTitle,
                         value: replyBody
                     });
-
                     msg.channel.send(reply)
                 })
             }
@@ -169,7 +175,6 @@ client.on('message', msg => {
                 name: replyTitle,
                 value: replyBody
             });
-
             msg.channel.send(reply)
         }
     }
