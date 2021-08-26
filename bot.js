@@ -108,7 +108,15 @@ client.on('message', msg => {
             }
         } else if (input[0] == "auctions") {
             if (input.length < 2) {
-                reply = "invalid arguments!\nusage: s.auctions <ign>";
+                replyTitle = "invalid arguments!"
+                replyBody = "usage: s.auctions <ign>"
+                
+                reply = new Discord.MessageEmbed()
+                .addFields({
+                    name: replyTitle,
+                    value: replyBody
+                });
+                msg.channel.send(reply);
             } else {
                 fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
                 .then(res => res.json())
@@ -167,6 +175,44 @@ client.on('message', msg => {
                     });
                     msg.channel.send(reply)
                 })
+            }
+        } else if (input[0] == "secrets") {
+            if (input.length < 2) {
+                replyTitle = "invalid arguments!"
+                replyBody = "usage: s.secrets <ign>"
+                
+                reply = new Discord.MessageEmbed()
+                .addFields({
+                    name: replyTitle,
+                    value: replyBody
+                });
+                msg.channel.send(reply);
+            } else {
+                fetch('https://sky.shiiyu.moe/api/v2/profile/' + input[1])
+                .then(res => res.json())
+                .then(json => {                    
+                    secrets = json.profiles[Object.keys(json.profiles)[0]].data.dungeons.secrets_found;
+
+                    replyTitle = input[1] + " Secret Count";
+                    replyBody = "found secrets: " + secrets;
+
+                    reply = new Discord.MessageEmbed()
+                    .addFields({
+                        name: replyTitle,
+                        value: replyBody
+                    });
+                    msg.channel.send(reply)
+                }).catch((error) => {
+                    replyTitle = "Player not Found!";
+                    replyBody = "Player " + input[1] + "was not found!";
+
+                    reply = new Discord.MessageEmbed()
+                    .addFields({
+                        name: replyTitle,
+                        value: replyBody
+                    });
+                    msg.channel.send(reply)
+                });
             }
         } else {
             replyTitle = "Unknown Command";
