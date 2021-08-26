@@ -85,20 +85,27 @@ client.on('message', msg => {
                         } else {
                             replyBody = "currently offline"; 
                         }
+
+                        reply = new Discord.MessageEmbed()
+                        .addFields({
+                            name: replyTitle,
+                            value: replyBody
+                        });
+                        msg.channel.send(reply);
                     });
                 })
                 .catch((error) => {
                     replyTitle = "Player not Found!";
                     replyBody = "Player " + input[1] + "was not found!";
+
+                    reply = new Discord.MessageEmbed()
+                    .addFields({
+                        name: replyTitle,
+                        value: replyBody
+                    });
+                    msg.channel.send(reply);
                 })
             }
-
-            reply = new Discord.MessageEmbed()
-            .addFields({
-                name: replyTitle,
-                value: replyBody
-            });
-            msg.channel.send(reply);
         } else if (input[0] == "auctions") {
             if (input.length < 2) {
                 reply = "invalid arguments!\nusage: s.auctions <ign>";
@@ -121,7 +128,7 @@ client.on('message', msg => {
                         replyTitle += "Player " + input[1] + " auctions:\n"
 
                         if (bins.length != 0) {
-                            reply += "BIN:\n"
+                            replyBody += "BIN:\n"
                         }
                         bins.forEach(auction => {
                             replyBody += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold") + "\n"
