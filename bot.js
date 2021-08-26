@@ -59,7 +59,7 @@ client.on('message', msg => {
         replyBody = "";
         if (input[0] == "help") {
             replyTitle = "available commands:"
-            replyBody = "online, auctions"
+            replyBody = "online, auctions, secrets"
             
             reply = new Discord.MessageEmbed()
             .addFields({
