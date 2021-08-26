@@ -67,7 +67,6 @@ client.on('message', msg => {
                     fetch(buildPath(hypixelapi, "status", [["uuid", json.uuid]]))
                     .then(res => res.json())
                     .then(json => {
-                        console.log(json.session)
                         if (json.session.online) {
                             reply = "Player " + input[1] + " is currently online playing " + json.session.gameType;
                         } else {
