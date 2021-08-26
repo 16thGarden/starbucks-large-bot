@@ -120,7 +120,7 @@ client.on('message', msg => {
                         })
 
                         if (bins.length == 0 && notbins.length == 0) {
-                            reply = "No active autions!"
+                            reply += "No active autions!"
                         }
 
                         msg.channel.send(reply);
