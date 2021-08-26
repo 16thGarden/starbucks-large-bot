@@ -60,6 +60,12 @@ client.on('message', msg => {
         if (input[0] == "help") {
             replyTitle = "available commands:"
             replyBody = "online, auctions"
+            
+            reply = {embed: {
+            title: replyTitle,
+            description: replyBody
+            }}
+            msg.channel.send(reply);
         } else if (input[0] == "online") {
             if (input.length < 2) {
                 replyTitle = "invalid arguments!";
@@ -85,6 +91,12 @@ client.on('message', msg => {
                     replyBody = "Player " + input[1] + "was not found!";
                 })
             }
+
+            reply = {embed: {
+                title: replyTitle,
+                description: replyBody
+            }}
+            msg.channel.send(reply);
         } else if (input[0] == "auctions") {
             if (input.length < 2) {
                 reply = "invalid arguments!\nusage: s.auctions <ign>";
@@ -129,18 +141,26 @@ client.on('message', msg => {
                 .catch((error) => {
                     replyTitle = "Player not Found!";
                     replyBody = "Player " + input[1] + "was not found!";
+
+                    reply = {embed: {
+                        title: replyTitle,
+                        description: replyBody
+                    }}
+
+                    msg.channel.send(reply)
                 })
             }
         } else {
             replyTitle = "Unknown Command";
             replyBody = "type s.help for help";
+
+            reply = {embed: {
+                title: replyTitle,
+                description: replyBody
+            }}
+            
+            msg.channel.send(reply)
         }
-
-        reply = new Discord.MessageEmbed()
-        .setTitle(replyTitle)
-        .setDescription(replyBody)
-
-        msg.channel.send(reply);
     }
 
     
