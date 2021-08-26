@@ -55,13 +55,15 @@ client.on('message', msg => {
         input = input.slice(2);
         input = input.split(" ");
 
-        reply = ""
+        replyTitle = "";
+        replyBody = "";
         if (input[0] == "help") {
-            msg.channel.send("available commands:\nonline\nauctions")
+            replyTitle = "available commands:"
+            replyBody = "online, auctions"
         } else if (input[0] == "online") {
             if (input.length < 2) {
-                reply = "invalid arguments!\nusage: s.online <ign>";
-                msg.channel.send(reply);
+                replyTitle = "invalid arguments!";
+                replyBody = "usage: s.online <ign>"
             } else {
                 fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
                 .then(res => res.json())
@@ -69,23 +71,23 @@ client.on('message', msg => {
                     fetch(buildPath(hypixelapi, "status", [["uuid", json.uuid]]))
                     .then(res => res.json())
                     .then(json => {
-                        if (json.session.online) {
-                            reply = "Player " + input[1] + " is currently online playing " + json.session.gameType;
-                        } else {
-                            reply = "Player " + input[1] + " is currently offline"; 
-                        }
+                        replyTitle = "Player " + input[1] + " Status";
 
-                        msg.channel.send(reply);
+                        if (json.session.online) {
+                            replyBody = "currently online playing " + json.session.gameType;
+                        } else {
+                            replyBody = "currently offline"; 
+                        }
                     });
                 })
                 .catch((error) => {
-                    msg.channel.send("Player " + input[1] + " not found!");
+                    replyTitle = "Player not Found!";
+                    replyBody = "Player " + input[1] + "was not found!";
                 })
             }
         } else if (input[0] == "auctions") {
             if (input.length < 2) {
                 reply = "invalid arguments!\nusage: s.auctions <ign>";
-                msg.channel.send(reply);
             } else {
                 fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
                 .then(res => res.json())
@@ -102,37 +104,43 @@ client.on('message', msg => {
                                 notbins.push(auction)
                             }
                         });
-                        reply += "Player " + input[1] + " auctions:\n"
+                        replyTitle += "Player " + input[1] + " auctions:\n"
 
                         if (bins.length != 0) {
                             reply += "BIN:\n"
                         }
                         bins.forEach(auction => {
-                            reply += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold") + "\n"
+                            replyBody += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold") + "\n"
                         })
                         var milliseconds
                         if (notbins.length != 0) {
-                            reply += "AUCTIONS:\n"
+                            replyBody += "AUCTIONS:\n"
                             milliseconds = (new Date).getTime();
                         }
                         notbins.forEach(auction => {
-                            reply += auction.item_name + " (bid at " + auction.highest_bid_amount + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
+                            replyBody += auction.item_name + " (bid at " + auction.highest_bid_amount + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
                         })
 
                         if (bins.length == 0 && notbins.length == 0) {
-                            reply += "No active autions!"
+                            replyBody += "No active autions!"
                         }
-
-                        msg.channel.send(reply);
                     });
                 })
                 .catch((error) => {
-                    msg.channel.send("Player " + input[1] + " not found!");
+                    replyTitle = "Player not Found!";
+                    replyBody = "Player " + input[1] + "was not found!";
                 })
             }
         } else {
-            msg.channel.send("unknown command, type s.help for help")
+            replyTitle = "Unknown Command";
+            replyBody = "type s.help for help";
         }
+
+        reply = new Discord.MessageEmbed()
+        .setTitle(replyTitle)
+        .setDescription(replyBody)
+
+        msg.channel.send(reply);
     }
 
     
