@@ -61,10 +61,11 @@ client.on('message', msg => {
             replyTitle = "available commands:"
             replyBody = "online, auctions"
             
-            reply = {embed: {
-            title: replyTitle,
-            description: replyBody
-            }}
+            reply = new Discord.MessageEmbed()
+            .addFields({
+                name: replyTitle,
+                value: replyBody
+            });
             msg.channel.send(reply);
         } else if (input[0] == "online") {
             if (input.length < 2) {
@@ -92,10 +93,11 @@ client.on('message', msg => {
                 })
             }
 
-            reply = {embed: {
-                title: replyTitle,
-                description: replyBody
-            }}
+            reply = new Discord.MessageEmbed()
+            .addFields({
+                name: replyTitle,
+                value: replyBody
+            });
             msg.channel.send(reply);
         } else if (input[0] == "auctions") {
             if (input.length < 2) {
@@ -142,10 +144,11 @@ client.on('message', msg => {
                     replyTitle = "Player not Found!";
                     replyBody = "Player " + input[1] + "was not found!";
 
-                    reply = {embed: {
-                        title: replyTitle,
-                        description: replyBody
-                    }}
+                    reply = new Discord.MessageEmbed()
+                    .addFields({
+                        name: replyTitle,
+                        value: replyBody
+                    });
 
                     msg.channel.send(reply)
                 })
@@ -154,11 +157,12 @@ client.on('message', msg => {
             replyTitle = "Unknown Command";
             replyBody = "type s.help for help";
 
-            reply = {embed: {
-                title: replyTitle,
-                description: replyBody
-            }}
-            
+            reply = new Discord.MessageEmbed()
+            .addFields({
+                name: replyTitle,
+                value: replyBody
+            });
+
             msg.channel.send(reply)
         }
     }
