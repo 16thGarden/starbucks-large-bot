@@ -134,7 +134,7 @@ client.on('message', msg => {
                         }
                         bins.forEach(auction => {
                             replyBody += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold")
-                            replyBody += (milliseconds > auction.end ? ", expired" : "") + "\n"
+                            replyBody += (auction.bids.length == 0 && milliseconds > auction.end ? ", expired" : "") + "\n"
                         })
 
                         if (notbins.length != 0) {
