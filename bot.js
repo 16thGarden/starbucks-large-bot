@@ -294,11 +294,13 @@ client.on('message', msg => {
                                 statuses.push(json.session.online)
 
                                 if (i == array.length - 1) {
+                                    console.log(statuses)
                                     if (failed || fuuidlist.length != statuses.length) {
                                         reply = new Discord.MessageEmbed()
                                         .addFields({
-                                            name: "API limit reached",
-                                            value: "please try again after cooldown"
+                                            name: "Hypixel API limit reached",
+                                            value: "got " + statuses.length + "/" + fuuidlist.length + " for page " + (page + 1) + "\n"
+                                            + "please try again after cooldown"
                                         });
                                         msg.channel.send(reply);
                                     } else {
@@ -310,11 +312,13 @@ client.on('message', msg => {
                                                 names.push(json.pseudo);
 
                                                 if (i == array.length - 1) {
+                                                    console.log(names)
                                                     if (failed || fuuidlist.length != names.length) {
                                                         reply = new Discord.MessageEmbed()
                                                         .addFields({
-                                                            name: "API limit reached",
-                                                            value: "please try again after cooldown"
+                                                            name: "Minecraft API limit reached",
+                                                            value: "got " + names.length + "/" + fuuidlist.length + " for page " + (page + 1) + "\n"
+                                                            + "please try again after cooldown"
                                                         });
                                                         msg.channel.send(reply);
                                                     } else {
