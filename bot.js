@@ -308,15 +308,15 @@ client.on('message', msg => {
                                             .then(res => res.json())
                                             .then(json => {
                                                 names.push(json.pseudo);
-                                                    reply = new Discord.MessageEmbed()
-                                                    .addFields({
-                                                        name: "API limit reached",
-                                                        value: "please try again after cooldown"
-                                                    });
-                                                    msg.channel.send(reply);
+
                                                 if (i == array.length - 1) {
                                                     if (failed || fuuidlist.length != names.length) {
-
+                                                        reply = new Discord.MessageEmbed()
+                                                        .addFields({
+                                                            name: "API limit reached",
+                                                            value: "please try again after cooldown"
+                                                        });
+                                                        msg.channel.send(reply);
                                                     } else {
                                                         replyTitle = "Friends List Page " + (page + 1) + " of " + (lastPage + 1);
                                                         names.forEach((name, i, array) => {
