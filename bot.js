@@ -160,7 +160,7 @@ client.on('message', msg => {
                                 name = auction.item_lore.split("\n")[0].slice(2);
                             }
 
-                            var cost = auction.starting_bid.split(".")[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            var cost = auction.starting_bid.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                             replyBody += name + " (" + cost + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold")
                             replyBody += (auction.bids.length == 0 && milliseconds > auction.end ? ", expired" : "") + "\n"
@@ -175,7 +175,7 @@ client.on('message', msg => {
                                 name = auction.item_lore.split("\n")[0].slice(2);
                             }
 
-                            var cost = auction.highest_bid_amount.split(".")[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            var cost = auction.highest_bid_amount.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                             replyBody += name + " (bid at " + cost + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
                         })
