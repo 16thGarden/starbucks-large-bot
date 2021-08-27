@@ -50,6 +50,13 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.author.bot) return
 
+    if (msg.channel.type == "dm") {
+        if (msg.author.id != process.env.CONTROLLER_ID) {
+            msg.channel.send("don't be a pussy and send your command in the public chat");
+            return
+        }
+    }
+
     input = msg.content;
     if (input.startsWith("s.")) {
         input = input.slice(2);
@@ -71,6 +78,13 @@ client.on('message', msg => {
             if (input.length < 2) {
                 replyTitle = "invalid arguments!";
                 replyBody = "usage: s.online <ign>"
+
+                reply = new Discord.MessageEmbed()
+                .addFields({
+                    name: replyTitle,
+                    value: replyBody
+                });
+                msg.channel.send(reply);
             } else {
                 fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
                 .then(res => res.json())
@@ -141,7 +155,11 @@ client.on('message', msg => {
                             replyBody += "BIN:\n"
                         }
                         bins.forEach(auction => {
-                            replyBody += auction.item_name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold")
+                            var name = auction.item_name
+                            if (name == "Enchanted Book") {
+                                name = auction.item_lore.split("\n")[0].slice(2);
+                            }
+                            replyBody += name + " (" + auction.starting_bid + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold")
                             replyBody += (auction.bids.length == 0 && milliseconds > auction.end ? ", expired" : "") + "\n"
                         })
 
@@ -149,7 +167,11 @@ client.on('message', msg => {
                             replyBody += "AUCTIONS:\n"
                         }
                         notbins.forEach(auction => {
-                            replyBody += auction.item_name + " (bid at " + auction.highest_bid_amount + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
+                            var name = auction.item_name
+                            if (name == "Enchanted Book") {
+                                name = auction.item_lore.split("\n")[0].slice(2);
+                            }
+                            replyBody += name + " (bid at " + auction.highest_bid_amount + ") " + ": " + (milliseconds > auction.end ? "ended" : "not ended") + "\n"
                         })
 
                         if (bins.length == 0 && notbins.length == 0) {
@@ -213,6 +235,106 @@ client.on('message', msg => {
                     });
                     msg.channel.send(reply)
                 });
+            }
+        } else if (input[0] == "flist") {
+            if (input.length < 2) {
+                replyTitle = "invalid arguments!";
+                replyBody = "usage: s.flist <ign> <page (optional)>"
+
+                reply = new Discord.MessageEmbed()
+                .addFields({
+                    name: replyTitle,
+                    value: replyBody
+                });
+                msg.channel.send(reply);
+            } else {
+                var page = input[2] || 1;
+                page--;
+                var perPage = 5;
+                
+                var failed = false;
+
+                fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
+                .then(res => res.json())
+                .then(json => {
+                    fetch(buildPath(hypixelapi, "friends", [["uuid", json.uuid]]))
+                    .then(res => res.json())
+                    .then(json => {
+                        var ownuuid = json.uuid;
+                        var fuuidlist = []
+                        
+                        var lastPage = Math.ceil(json.records.length / perPage) - 1
+                        var lastPageSize = json.records.length % perPage
+                        
+                        var starting = page * perPage;
+                        var limit = (page == lastPage ? page * perPage + lastPageSize : page * perPage + perPage)
+
+                        for (var i = starting; i < limit; i++) {
+                            if (json.records[i].uuidSender == ownuuid) {
+                                fuuidlist.push(json.records[i].uuidReceiver)
+                            } else {
+                                fuuidlist.push(json.records[i].uuidSender)
+                            }
+                        }
+                        
+                        var statuses = []
+                        fuuidlist.forEach((uuid, i, array) => {
+                            fetch(buildPath(hypixelapi, "status", [["uuid", uuid]]))
+                            .then(res => res.json())
+                            .then(json => {
+                                if (!json.success) {
+                                    failed = true;
+                                }
+                                statuses.push(json.session.online)
+
+                                if (i == array.length - 1) {
+                                    if (failed || fuuidlist.length != statuses.length || fuuidlist.length != names.length) {
+                                        reply = new Discord.MessageEmbed()
+                                        .addFields({
+                                            name: "API limit reached",
+                                            value: "please try again after cooldown"
+                                        });
+                                        msg.channel.send(reply);
+                                    } else {
+                                        var names = []
+                                        fuuidlist.forEach((uuid, i, array) => {
+                                            fetch(buildPath("https://minecraft-api.com", "api/pseudo/" + uuid + "/json", []))
+                                            .then(res => res.json())
+                                            .then(json => {
+                                                names.push(json.pseudo);
+
+                                                if (i == array.length - 1) {
+                                                    replyTitle = "Friends List Page " + (page + 1) + " of " + (lastPage + 1);
+                                                    names.forEach((name, i, array) => {
+                                                        replyBody += name + ": " + (statuses[i] ? "online" : "offline") + "\n";
+                                                    });
+
+                                                    reply = new Discord.MessageEmbed()
+                                                    .addFields({
+                                                        name: replyTitle,
+                                                        value: replyBody
+                                                    });
+                                                    msg.channel.send(reply);
+                                                }
+                                            });
+                                        });
+                                    }
+                                }
+                            });
+                        })
+                    });
+                })
+                .catch((error) => {
+                    replyTitle = "Player not Found!";
+                    replyBody = "Player " + input[1] + "was not found!";
+
+                    reply = new Discord.MessageEmbed()
+                    .addFields({
+                        name: replyTitle,
+                        value: replyBody
+                    });
+                    msg.channel.send(reply);
+                })
             }
         } else {
             replyTitle = "Unknown Command";
