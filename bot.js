@@ -294,7 +294,7 @@ client.on('message', msg => {
                                 statuses.push(json.session.online)
 
                                 if (i == array.length - 1) {
-                                    if (failed || fuuidlist.length != statuses.length || fuuidlist.length != names.length) {
+                                    if (failed || fuuidlist.length != statuses.length) {
                                         reply = new Discord.MessageEmbed()
                                         .addFields({
                                             name: "API limit reached",
@@ -308,19 +308,28 @@ client.on('message', msg => {
                                             .then(res => res.json())
                                             .then(json => {
                                                 names.push(json.pseudo);
-
-                                                if (i == array.length - 1) {
-                                                    replyTitle = "Friends List Page " + (page + 1) + " of " + (lastPage + 1);
-                                                    names.forEach((name, i, array) => {
-                                                        replyBody += name + ": " + (statuses[i] ? "online" : "offline") + "\n";
-                                                    });
-
                                                     reply = new Discord.MessageEmbed()
                                                     .addFields({
-                                                        name: replyTitle,
-                                                        value: replyBody
+                                                        name: "API limit reached",
+                                                        value: "please try again after cooldown"
                                                     });
                                                     msg.channel.send(reply);
+                                                if (i == array.length - 1) {
+                                                    if (failed || fuuidlist.length != names.length) {
+
+                                                    } else {
+                                                        replyTitle = "Friends List Page " + (page + 1) + " of " + (lastPage + 1);
+                                                        names.forEach((name, i, array) => {
+                                                            replyBody += name + ": " + (statuses[i] ? "online" : "offline") + "\n";
+                                                        });
+
+                                                        reply = new Discord.MessageEmbed()
+                                                        .addFields({
+                                                            name: replyTitle,
+                                                            value: replyBody
+                                                        });
+                                                        msg.channel.send(reply);
+                                                    }
                                                 }
                                             });
                                         });
