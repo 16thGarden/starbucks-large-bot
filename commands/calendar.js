@@ -142,9 +142,9 @@ function when(event) {
         farIn = (now - (nextEvent - event.interval))
         endsIn = event.duration - farIn
         
-        return -endsIn
+        return endsIn
     } else {
-        return eventIn
+        return eventIn * 2
     }
 }
 
