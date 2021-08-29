@@ -125,7 +125,7 @@ function calendarMessage(event, gmt) {
     return {
         name: name,
         value: result
-    }
+    } 
 }
 
 module.exports = function() {
