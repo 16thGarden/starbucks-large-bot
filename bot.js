@@ -51,6 +51,8 @@ function commandExists(command) {
     return false
 }
 
+bufferReply = new Discord.MessageEmbed().setDescription("retrieving data...")
+
 client.on('message', msg => {
     if (msg.author.bot) return
     input = msg.content;
@@ -61,9 +63,6 @@ client.on('message', msg => {
             return
         }
     }
-
-    pendingMessage = new Discord.MessageEmbed()
-    .setDescription("retrieving data...")
 
     input = input.slice(commandPrefix.length);
     input = input.split(" ");
@@ -76,19 +75,20 @@ client.on('message', msg => {
         reply = help(commands, commandDescriptions)
         msg.channel.send(reply)
     } else if (command == "online") {
-        msg.channel.send(pendingMessage).then(sentMessage => {
+        msg.channel.send(bufferReply).then(sentMessage => {
             online(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
     } else if (command == "auctions") {
-        msg.channel.send(pendingMessage).then(sentMessage => {
+        msg.channel.send(bufferReply).then(sentMessage => {
             auctions(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
+        sendPendingReply(msg, online, input[0])
     } else if (command == "secrets") {
-        msg.channel.send(pendingMessage).then(sentMessage => {
+        msg.channel.send(bufferReply).then(sentMessage => {
             secrets(input[1]).then(result => {
                 sentMessage.edit(result)
             })
