@@ -14,9 +14,6 @@ app.listen(port, function() {
 
 //===================================================================
 
-const fetch = require('node-fetch');
-const hypixelapi = "https://api.hypixel.net";
-
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -60,7 +57,7 @@ client.on('message', msg => {
     if (!input.toLowerCase().startsWith(commandPrefix)) return
     if (msg.channel.type == "dm") {
         if (msg.author.id != process.env.CONTROLLER_ID) {
-            msg.channel.send("dm commands not available, send your command in the public chat");
+            msg.channel.send("dm commands not available");
             return
         }
     }
@@ -88,47 +85,6 @@ client.on('message', msg => {
             msg.channel.send(result)
         })
     }
-    /*
-    else if (input[0] == "secrets") {
-        if (input.length < 2) {
-            replyTitle = "invalid arguments!"
-            replyBody = "usage: s.secrets <ign>"
-            
-            reply = new Discord.MessageEmbed()
-            .addFields({
-                name: replyTitle,
-                value: replyBody
-            });
-            msg.channel.send(reply);
-        } else {
-            fetch('https://sky.shiiyu.moe/api/v2/profile/' + input[1])
-            .then(res => res.json())
-            .then(json => {                    
-                secrets = json.profiles[Object.keys(json.profiles)[0]].data.dungeons.secrets_found;
-
-                replyTitle = input[1] + " Secret Count";
-                replyBody = "found secrets: " + secrets.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-                reply = new Discord.MessageEmbed()
-                .addFields({
-                    name: replyTitle,
-                    value: replyBody
-                });
-                msg.channel.send(reply)
-            }).catch((error) => {
-                replyTitle = "Player not Found!";
-                replyBody = "Player " + input[1] + "was not found!";
-
-                reply = new Discord.MessageEmbed()
-                .addFields({
-                    name: replyTitle,
-                    value: replyBody
-                });
-                msg.channel.send(reply)
-            });
-        }
-    }
-    */
 });
 
 client.login(process.env.BOT_TOKEN).then(() => {

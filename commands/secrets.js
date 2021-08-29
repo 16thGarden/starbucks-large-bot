@@ -23,7 +23,7 @@ const getSecrets = (ign) => {
             secrets = json.profiles[Object.keys(json.profiles)[0]].data.dungeons.secrets_found;
 
             replyTitle = input[1] + " Secret Count";
-            replyBody = "found secrets: " + secrets.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            replyBody = "found secrets: " + secrets.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
             reply = new Discord.MessageEmbed()
             .setTitle(replyTitle)
@@ -31,6 +31,7 @@ const getSecrets = (ign) => {
 
             resolve(reply)
         }).catch((error) => {
+            console.log(error)
             replyTitle = "Player not Found!";
             replyBody = "Player " + ign + " was not found!";
 

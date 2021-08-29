@@ -1,7 +1,9 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 require('dotenv').config()
-const KEY = process.env.HYPIXEL_API_KEY
+
+const buildPath = require('../buildHypixelPath.js')
+const hypixelapi = "https://api.hypixel.net"
 
 const getAuctions = (ign) => {
     if (ign === undefined) {
@@ -18,13 +20,12 @@ const getAuctions = (ign) => {
     }
 
     return new Promise((resolve, reject) => {
-        fetch("https://minecraft-api.com/api/uuid/" + ign + "/json")
+        fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
         .then(res => res.json())
         .then(json => {
-            fetch("https://api.hypixel.net/skyblock/auction?key=" + KEY + "&uuid=" + json.uuid)
+            fetch(buildPath(hypixelapi, "skyblock/auction", [["player", json.uuid]]))
             .then(res => res.json())
             .then(json => {
-                console.log(json.auctions)
                 bins = []
                 notbins = []
 
@@ -50,23 +51,25 @@ const getAuctions = (ign) => {
 
                     var cost = auction.starting_bid.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-                    replyValue += name + " (" + cost + ") " + ": " + (auction.bids.length == 0 ? "not sold" : "sold") + ", "
+                    replyValue += name + " (" + cost + ") " + ": " + (auction.bids.length == 0 ? "not sold, " : "sold.")
                     if (auction.bids.length == 0 && milliseconds > auction.end) {
                         replyValue += "expired."
                     } else {
-                        timeLeft = milliseconds - auction.end
+                        if (auction.bids.length == 0) {
+                            timeLeft = auction.end - milliseconds
 
-                        dayLength = 1000 * 60 * 60 * 24
-                        hourLength = 1000 * 60 * 60
-                        minuteLength = 1000 * 60
+                            dayLength = 1000 * 60 * 60 * 24
+                            hourLength = 1000 * 60 * 60
+                            minuteLength = 1000 * 60
 
-                        days = Math.floor(ago / dayLength)
-                        timeLeft %= dayLength
-                        hours = Math.floor(ago / hourLength)
-                        timeLeft %= hourLength
-                        minutes = Math.floor(ago / minuteLength)
-                        timeLeft %= minuteLength
-                        replyValue += "ends in " + days + "d " + hours + "h " + minutes + "m."
+                            days = Math.floor(timeLeft / dayLength)
+                            timeLeft %= dayLength
+                            hours = Math.floor(timeLeft / hourLength)
+                            timeLeft %= hourLength
+                            minutes = Math.floor(timeLeft / minuteLength)
+                            timeLeft %= minuteLength
+                            replyValue += "ends in " + days + "d " + hours + "h " + minutes + "m."
+                        }
                     }
                     replyValue += "\n"
                 })
@@ -90,17 +93,17 @@ const getAuctions = (ign) => {
                     if (milliseconds >= auction.end) {
                         replyValue += "ended."
                     } else if (milliseconds < auction.end) {
-                        timeLeft = milliseconds - auction.end
+                        timeLeft = auction.end - milliseconds
 
                         dayLength = 1000 * 60 * 60 * 24
                         hourLength = 1000 * 60 * 60
                         minuteLength = 1000 * 60
 
-                        days = Math.floor(ago / dayLength)
+                        days = Math.floor(timeLeft / dayLength)
                         timeLeft %= dayLength
-                        hours = Math.floor(ago / hourLength)
+                        hours = Math.floor(timeLeft / hourLength)
                         timeLeft %= hourLength
-                        minutes = Math.floor(ago / minuteLength)
+                        minutes = Math.floor(timeLeft / minuteLength)
                         timeLeft %= minuteLength
                         replyValue += "ends in " + days + "d " + hours + "h " + minutes + "m."
                     }
@@ -133,6 +136,7 @@ const getAuctions = (ign) => {
             })
         })
         .catch((error) => {
+            console.log(error)
             replyTitle = "Player not Found!";
             replyBody = "Player " + ign + " was not found!";
 
