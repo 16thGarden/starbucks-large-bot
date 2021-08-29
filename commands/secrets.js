@@ -22,8 +22,14 @@ const getSecrets = (ign) => {
         .then(json => {                    
             secrets = json.profiles[Object.keys(json.profiles)[0]].data.dungeons.secrets_found;
 
-            replyTitle = input[1] + " Secret Count";
+            clown = secrets < 1000
+
+            replyTitle = input[1] + ":clown: Secret Count";
             replyBody = "found secrets: " + secrets.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            if (clown) {
+                replyBody += "<a:clown:19fc9fc6001951c7370b1fd74e1570f1>"
+            }
 
             reply = new Discord.MessageEmbed()
             .setTitle(replyTitle)
