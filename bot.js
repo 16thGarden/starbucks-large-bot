@@ -23,16 +23,18 @@ client.on('ready', () => {
 
 commandPrefix = "s."
 commands = [
-    "help",
-    "online",
-    "auctions",
-    "secrets",
+    "help", "h",
+    "online", "o",
+    "auctions", "a",
+    "secrets", "s",
+    "calendar", "c",
 ]
 commandDescriptions = [
     "display list of commands",
     "show online status of a player",
     "show pending auctions of a player",
-    "show total secret count of a player"
+    "show total secret count of a player",
+    "show current and upcoming events",
 ]
 
 const unknownCommand = require('./commands/unknownCommand.js')
@@ -40,6 +42,7 @@ const help = require('./commands/help.js')
 const online = require('./commands/online.js')
 const auctions = require('./commands/auctions.js')
 const secrets = require('./commands/secrets.js')
+const calendar = require('./commands/calendar.js')
 
 function commandExists(command) {
     for (var i = 0; i < commands.length; i++) {
@@ -69,29 +72,31 @@ client.on('message', msg => {
 
     command = input[0].toLowerCase()
     if (!commandExists(command)) {
-        reply = unknownCommand()
+        reply = unknownCommand(commandPrefix)
         msg.channel.send(reply)
-    } else if (command == "help") {
-        reply = help(commands, commandDescriptions)
+    } else if (command == commands[0] || command == commands[1]) {
+        reply = help(commandPrefix, commands, commandDescriptions)
         msg.channel.send(reply)
-    } else if (command == "online") {
+    } else if (command == commands[2] || command == commands[3]) {
         msg.channel.send(bufferReply).then(sentMessage => {
             online(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
-    } else if (command == "auctions") {
+    } else if (command == commands[4] || command == commands[5]) {
         msg.channel.send(bufferReply).then(sentMessage => {
             auctions(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
-    } else if (command == "secrets") {
+    } else if (command == commands[6] || command == commands[7]) {
         msg.channel.send(bufferReply).then(sentMessage => {
             secrets(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
+    } else if (command == commands[8] || command == commands[9]) {
+        msg.channel.send(calendar())
     }
 });
 

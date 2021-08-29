@@ -63,7 +63,10 @@ const getStatus = (ign) => {
                         });
                     }
                     
+                    color = online ? "00FF00" : "FF0000"
+
                     reply = new Discord.MessageEmbed()
+                    .setColor(color)
                     .setTitle(replyTitle)
                     .addFields(replyBody)
 

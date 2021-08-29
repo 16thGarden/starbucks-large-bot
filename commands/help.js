@@ -1,11 +1,11 @@
 const Discord = require('discord.js');
 
-module.exports = function(commands, commandDescriptions) {
+module.exports = function(prefix, commands, commandDescriptions) {
     replyTitle = "Available Commands:"
     replyBody = []
-    commands.forEach((element, i, array) => {
+    commandDescriptions.forEach((element, i, array) => {
         replyBody.push({
-            name: "s." + element,
+            name: prefix + commands[i * 2] + " (alias " + prefix + commands[i * 2 + 1] + ")",
             value: commandDescriptions[i]
         })
     });

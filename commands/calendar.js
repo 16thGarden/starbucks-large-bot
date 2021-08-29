@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 function unixEpochToString(n) {
     dayLength = 1000 * 60 * 60 * 24
     hourLength = 1000 * 60 * 60
@@ -112,9 +114,9 @@ function calendarMessage(event) {
     if (eventIn > event.interval - event.duration) {
         name += "Currently " 
         endsIn = nextEvent - (now - (nextEvent - event.interval))
-        result += "ends in " + unixEpochToString(endsIn) + " " + prettyDate(now + endsIn, dateFormat)
+        result += "ends in " + unixEpochToString(endsIn) + "\n" + prettyDate(now + endsIn, dateFormat)
     } else {
-        result += "starts in " + unixEpochToString(eventIn) + " " + prettyDate(now + eventIn, dateFormat)
+        result += "starts in " + unixEpochToString(eventIn) + "\n" + prettyDate(now + eventIn, dateFormat)
     }
     name += event.name
 
@@ -124,56 +126,63 @@ function calendarMessage(event) {
     }
 }
 
-skyblockYear = 1000 * 60 * 60 * 124
-oneHour = 1000 * 60 * 60
+module.exports = function(commands, commandDescriptions) {
+    skyblockYear = 1000 * 60 * 60 * 124
+    oneHour = 1000 * 60 * 60
 
-jerryWorkshopOpensAnchor = 1630319700000 - skyblockYear
-jerryEventAnchor = jerryWorkshopOpensAnchor + (oneHour * 8) - skyblockYear
-newYearCelebrationAnchor = jerryEventAnchor + (oneHour * 2 + 1000 * 60 * 20) - skyblockYear
-spookyFestivalAnchor = 1630654500000 - skyblockYear
-spookyFishingAnchor = spookyFestivalAnchor - (oneHour) - skyblockYear
-travellingZooAnchor = 1630248900000 - skyblockYear
+    jerryWorkshopOpensAnchor = 1630319700000 - skyblockYear
+    jerryEventAnchor = jerryWorkshopOpensAnchor + (oneHour * 8) - skyblockYear
+    newYearCelebrationAnchor = jerryEventAnchor + (oneHour * 2 + 1000 * 60 * 20) - skyblockYear
+    spookyFestivalAnchor = 1630654500000 - skyblockYear
+    spookyFishingAnchor = spookyFestivalAnchor - (oneHour) - skyblockYear
+    travellingZooAnchor = 1630248900000 - skyblockYear
 
-events = [
-    {
-        name: "Jerry's Workshop Opens",
-        anchor: jerryWorkshopOpensAnchor,
-        duration: oneHour * 10,
-        interval: oneHour * 124,
-    },
-    {
-        name: "Jerry Event",
-        anchor: jerryEventAnchor,
-        duration: oneHour * 1,
-        interval: oneHour * 124,
-    },
-    {
-        name: "New Year Celebration",
-        anchor: newYearCelebrationAnchor,
-        duration: oneHour * 1,
-        interval: oneHour * 124,
-    },
-    {
-        name: "Spooky Festival",
-        anchor: spookyFestivalAnchor,
-        duration: oneHour * 1,
-        interval: oneHour * 124,
-    },
-    {
-        name: "Spooky Fishing",
-        anchor: spookyFishingAnchor,
-        duration: oneHour * 3,
-        interval: oneHour * 124,
-    },
-    {
-        name: "Travelling Zoo",
-        anchor: travellingZooAnchor,
-        duration: oneHour * 1,
-        interval: oneHour * 62,
-    }
-   
-]
+    events = [
+        {
+            name: "Jerry's Workshop Opens",
+            anchor: jerryWorkshopOpensAnchor,
+            duration: oneHour * 10,
+            interval: oneHour * 124,
+        },
+        {
+            name: "Jerry Event",
+            anchor: jerryEventAnchor,
+            duration: oneHour * 1,
+            interval: oneHour * 124,
+        },
+        {
+            name: "New Year Celebration",
+            anchor: newYearCelebrationAnchor,
+            duration: oneHour * 1,
+            interval: oneHour * 124,
+        },
+        {
+            name: "Spooky Festival",
+            anchor: spookyFestivalAnchor,
+            duration: oneHour * 1,
+            interval: oneHour * 124,
+        },
+        {
+            name: "Spooky Fishing",
+            anchor: spookyFishingAnchor,
+            duration: oneHour * 3,
+            interval: oneHour * 124,
+        },
+        {
+            name: "Travelling Zoo",
+            anchor: travellingZooAnchor,
+            duration: oneHour * 1,
+            interval: oneHour * 62,
+        }
+    
+    ]
 
-events.forEach(event => {
-    console.log(calendarMessage(event))
-})
+    reply = []
+    events.forEach(event => {
+        reply.push(calendarMessage(event))
+    })
+
+    return new Discord.MessageEmbed()
+    .setTitle("Calendar")
+    .addFields(reply);
+}
