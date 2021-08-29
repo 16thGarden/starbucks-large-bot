@@ -23,8 +23,9 @@ const getSecrets = (ign) => {
             secrets = json.profiles[Object.keys(json.profiles)[0]].data.dungeons.secrets_found;
 
             clown = secrets < 1000
-
-            replyTitle = input[1] + ":clown: Secret Count";
+            replyTitle = input[1]
+            replyTitle += clown ? " :clown:" : ""
+            replyTitle +=  " Secret Count"
             replyBody = "found secrets: " + secrets.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
             if (clown) {
