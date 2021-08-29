@@ -98,7 +98,7 @@ function prettyDate(epoch, dateFormat){
 	return _df;
 }
 
-function calendarMessage(event, gmt) {
+function calendarMessage(event) {
     now = (new Date).getTime()
     nextEvent = event.anchor
     while(nextEvent <= now) {
@@ -127,6 +127,43 @@ function calendarMessage(event, gmt) {
         name: name,
         value: result
     } 
+}
+
+function when(event) {
+    now = (new Date).getTime()
+    nextEvent = event.anchor
+    while(nextEvent <= now) {
+        nextEvent += event.interval
+    }
+
+    eventIn = nextEvent - now
+
+    if (eventIn > event.interval - event.duration) {
+        farIn = (now - (nextEvent - event.interval))
+        endsIn = event.duration - farIn
+        
+        return -endsIn
+    } else {
+        return eventIn
+    }
+}
+
+function sort(reply, sorts) {
+    for (var i = 0; i < sorts.length; i++) {
+        for(var j = 0; j < sorts.length - i - 1; j++) {
+            if(sorts[j] > sorts[j + 1]) {
+                var temp = sorts[j]
+                sorts[j] = sorts[j + 1]
+                sorts[j+1] = temp
+
+                temp = reply[j]
+                reply[j] = reply[j + 1]
+                reply[j+1] = temp
+            }
+        }
+    }
+
+    return reply
 }
 
 module.exports = function() {
@@ -181,11 +218,14 @@ module.exports = function() {
     ]
 
     reply = []
+    sorts = []
     events.forEach(event => {
         reply.push(calendarMessage(event))
+        sorts.push(when(event))
     })
 
     return new Discord.MessageEmbed()
+    .setColor("0000FF")
     .setTitle("Calendar")
-    .addFields(reply)
+    .addFields(sort(reply, sorts))
 }
