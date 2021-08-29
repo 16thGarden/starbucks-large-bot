@@ -98,7 +98,7 @@ function prettyDate(epoch, dateFormat){
 	return _df;
 }
 
-function calendarMessage(event) {
+function calendarMessage(event, gmt) {
     now = (new Date).getTime()
     nextEvent = event.anchor
     while(nextEvent <= now) {
@@ -114,9 +114,11 @@ function calendarMessage(event) {
     if (eventIn > event.interval - event.duration) {
         name += "Currently " 
         endsIn = nextEvent - (now - (nextEvent - event.interval))
-        result += "ends in " + unixEpochToString(endsIn) + "\n" + prettyDate(now + endsIn, dateFormat)
+        //result += "ends in " + unixEpochToString(endsIn) + "\n" + prettyDate(now + endsIn, dateFormat)
+        result += "ends in " + unixEpochToString(endsIn) + "\n" + "<t:" + ((now + endsIn) / 1000) + ":F>"
     } else {
-        result += "starts in " + unixEpochToString(eventIn) + "\n" + prettyDate(now + eventIn, dateFormat)
+        //result += "starts in " + unixEpochToString(eventIn) + "\n" + prettyDate(now + eventIn, dateFormat)
+        result += "starts in " + unixEpochToString(eventIn) + "\n" + "<t:" + ((now + eventIn) / 1000) + ":F>"
     }
     name += event.name
 
@@ -126,7 +128,7 @@ function calendarMessage(event) {
     }
 }
 
-module.exports = function(commands, commandDescriptions) {
+module.exports = function() {
     skyblockYear = 1000 * 60 * 60 * 124
     oneHour = 1000 * 60 * 60
 
@@ -184,5 +186,5 @@ module.exports = function(commands, commandDescriptions) {
 
     return new Discord.MessageEmbed()
     .setTitle("Calendar")
-    .addFields(reply);
+    .addFields(reply)
 }
