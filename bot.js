@@ -62,6 +62,9 @@ client.on('message', msg => {
         }
     }
 
+    pendingMessage = new Discord.MessageEmbed()
+    .setDescription("retrieving data...")
+
     input = input.slice(commandPrefix.length);
     input = input.split(" ");
 
@@ -73,16 +76,22 @@ client.on('message', msg => {
         reply = help(commands, commandDescriptions)
         msg.channel.send(reply)
     } else if (command == "online") {
-        online(input[1]).then(result => {
-            msg.channel.send(result)
+        msg.channel.send(pendingMessage).then(sentMessage => {
+            online(input[1]).then(result => {
+                sentMessage.edit(result)
+            })
         })
     } else if (command == "auctions") {
-        auctions(input[1]).then(result => {
-            msg.channel.send(result)
+        msg.channel.send(pendingMessage).then(sentMessage => {
+            auctions(input[1]).then(result => {
+                sentMessage.edit(result)
+            })
         })
     } else if (command == "secrets") {
-        secrets(input[1]).then(result => {
-            msg.channel.send(result)
+        msg.channel.send(pendingMessage).then(sentMessage => {
+            secrets(input[1]).then(result => {
+                sentMessage.edit(result)
+            })
         })
     }
 });
