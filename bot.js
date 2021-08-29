@@ -86,7 +86,6 @@ client.on('message', msg => {
                 sentMessage.edit(result)
             })
         })
-        sendPendingReply(msg, online, input[0])
     } else if (command == "secrets") {
         msg.channel.send(bufferReply).then(sentMessage => {
             secrets(input[1]).then(result => {
