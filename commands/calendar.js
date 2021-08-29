@@ -113,7 +113,8 @@ function calendarMessage(event, gmt) {
     result = ""
     if (eventIn > event.interval - event.duration) {
         name += "Currently " 
-        endsIn = nextEvent - (now - (nextEvent - event.interval))
+        farIn = (now - (nextEvent - event.interval))
+        endsIn = event.duration - farIn
         //result += "ends in " + unixEpochToString(endsIn) + "\n" + prettyDate(now + endsIn, dateFormat)
         result += "ends in " + unixEpochToString(endsIn) + "\n" + "<t:" + ((now + endsIn) / 1000) + ":F>"
     } else {
