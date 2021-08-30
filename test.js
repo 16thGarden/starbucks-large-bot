@@ -9,14 +9,12 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.channel.type == "dm") {
         if (msg.author.id == process.env.CONTROLLER_ID) {
-            replyTitle = "test"
-            replyBody = "123" + " :clown:"
-            reply = new Discord.MessageEmbed()
-            .setTitle(replyTitle)
-            .setDescription(replyBody)
+            channel = client.channels.cache.get(msg.channel.id)
 
-            msg.channel.send(reply);
-            return
+            channel.messages.fetch({ limit: 100 }).then(messages => {
+                console.log(`Received ${messages.size} messages`)
+                messages.forEach(message => console.log(message.content))
+            })
         }
     }
 })

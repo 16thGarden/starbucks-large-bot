@@ -20,7 +20,7 @@ const getAuctions = (ign) => {
     }
 
     return new Promise((resolve, reject) => {
-        fetch(buildPath("https://minecraft-api.com", "api/uuid/" + input[1] + "/json", []))
+        fetch(buildPath("https://minecraft-api.com", "api/uuid/" + ign + "/json", []))
         .then(res => res.json())
         .then(json => {
             fetch(buildPath(hypixelapi, "skyblock/auction", [["player", json.uuid]]))
@@ -116,7 +116,7 @@ const getAuctions = (ign) => {
                 if (unclaimedCoins > 0) {
                     replyBody.push({
                         name: "You have unclaimed coins!",
-                        value: unclaimedCoins.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " available"
+                        value: "Total: " + unclaimedCoins.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     })
                 }
 
