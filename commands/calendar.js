@@ -100,11 +100,7 @@ function prettyDate(epoch, dateFormat){
 
 function calendarMessage(event) {
     now = (new Date).getTime()
-    nextEvent = event.anchor
-    while(nextEvent <= now) {
-        nextEvent += event.interval
-    }
-
+    nextEvent = event.anchor + (Math.floor((now - event.anchor) / event.interval) + 1) * event.interval
     eventIn = nextEvent - now
 
     dateFormat = "DDD MMM dd hh:mm:ss 12"
