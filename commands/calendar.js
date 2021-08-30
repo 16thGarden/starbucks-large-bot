@@ -170,7 +170,7 @@ module.exports = function() {
     skyblockYear = 1000 * 60 * 60 * 124
     oneHour = 1000 * 60 * 60
 
-    jerryWorkshopOpensAnchor = 1630319700000 - skyblockYear
+    jerryWorkshopOpensAnchor = 1630323300000 - skyblockYear
     jerryEventAnchor = jerryWorkshopOpensAnchor + (oneHour * 8) - skyblockYear
     newYearCelebrationAnchor = jerryEventAnchor + (oneHour * 2 + 1000 * 60 * 20) - skyblockYear
     spookyFestivalAnchor = 1630654500000 - skyblockYear
