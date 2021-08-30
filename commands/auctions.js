@@ -39,10 +39,11 @@ const getAuctions = (ign) => {
 
                 replyTitle = "Player " + ign + " Auctions"
                 replyBody = []
+                unclaimedCoins = 0
 
                 var milliseconds = (new Date).getTime();
 
-                replyValue = ""
+                replyValueBIN = ""
                 bins.forEach(auction => {
                     var name = auction.item_name
                     if (name == "Enchanted Book") {
@@ -51,9 +52,9 @@ const getAuctions = (ign) => {
 
                     var cost = auction.starting_bid.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-                    replyValue += name + " (" + cost + ") " + ": " + (auction.bids.length == 0 ? "not sold, " : "sold.")
+                    replyValueBIN += name + " (" + cost + ") " + ": " + (auction.bids.length == 0 ? "not sold, " : "sold.")
                     if (auction.bids.length == 0 && milliseconds > auction.end) {
-                        replyValue += "expired."
+                        replyValueBIN += "expired."
                     } else {
                         if (auction.bids.length == 0) {
                             timeLeft = auction.end - milliseconds
@@ -68,19 +69,17 @@ const getAuctions = (ign) => {
                             timeLeft %= hourLength
                             minutes = Math.floor(timeLeft / minuteLength)
                             timeLeft %= minuteLength
-                            replyValue += "ends in " + days + "d " + hours + "h " + minutes + "m."
+                            replyValueBIN += "ends in " + days + "d " + hours + "h " + minutes + "m."
                         }
                     }
-                    replyValue += "\n"
-                })
-                if (bins.length != 0) {
-                    replyBody.push({
-                        name: "BIN:",
-                        value: replyValue
-                    })
-                }
+                    replyValueBIN += "\n"
 
-                replyValue = ""
+                    if (auction.bids.length != 0) {
+                        unclaimedCoins += auction.starting_bid
+                    }
+                })
+
+                replyValueAUCTIONS = ""
                 notbins.forEach(auction => {
                     var name = auction.item_name
                     if (name == "Enchanted Book") {
@@ -89,9 +88,9 @@ const getAuctions = (ign) => {
 
                     var cost = auction.highest_bid_amount.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-                    replyValue += name + " (bid at " + cost + ") " + ": "
+                    replyValueAUCTIONS += name + " (bid at " + cost + ") " + ": "
                     if (milliseconds >= auction.end) {
-                        replyValue += "ended."
+                        replyValueAUCTIONS += "ended."
                     } else if (milliseconds < auction.end) {
                         timeLeft = auction.end - milliseconds
 
@@ -105,14 +104,33 @@ const getAuctions = (ign) => {
                         timeLeft %= hourLength
                         minutes = Math.floor(timeLeft / minuteLength)
                         timeLeft %= minuteLength
-                        replyValue += "ends in " + days + "d " + hours + "h " + minutes + "m."
+                        replyValueAUCTIONS += "ends in " + days + "d " + hours + "h " + minutes + "m."
                     }
-                    replyValue += "\n"
+                    replyValueAUCTIONS += "\n"
+
+                    if (milliseconds >= auction.end && auction.highest_bid_amount > 0) {
+                        unclaimedCoins += auction.highest_bid_amount
+                    }
                 })
+
+                if (unclaimedCoins > 0) {
+                    replyBody.push({
+                        name: "You have unclaimed coins!",
+                        value: unclaimedCoins.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " available"
+                    })
+                }
+
+                if (bins.length != 0) {
+                    replyBody.push({
+                        name: "BIN:",
+                        value: replyValueBIN
+                    })
+                }
+
                 if (notbins.length != 0) {
                     replyBody.push({
                         name: "AUCTIONS:",
-                        value: replyValue
+                        value: replyValueAUCTIONS
                     })
                 }
 
