@@ -178,7 +178,7 @@ module.exports = function() {
         {
             name: "Jerry's Workshop Opens",
             anchor: jerryWorkshopOpensAnchor,
-            duration: oneHour * 10,
+            duration: oneHour * 10 + oneMinute * 20,
             interval: oneHour * 124,
         },
         {
