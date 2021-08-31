@@ -140,12 +140,15 @@ const getAuctions = (ign) => {
                     replyBody = "No active autions!"
                 }
 
+                color = unclaimedCoins > 0 ? "FFFF00" : "000000"
+
                 if (noAuctions) {
                     reply = new Discord.MessageEmbed()
                     .setTitle(replyTitle)
                     .setDescription("No active autions!")
                 } else {
                     reply = new Discord.MessageEmbed()
+                    .setColor(color)
                     .setTitle(replyTitle)
                     .addFields(replyBody)
                 }
