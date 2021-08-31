@@ -16,6 +16,17 @@ app.listen(port, function() {
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const whitelist = require('./whitelist.js')
+
+isWhiteListed = (id) => {
+    for (var i = 0; i < whitelist.length; i++) {
+        if (id == whitelist[i]) {
+            return true
+        }
+    }
+
+    return false
+}
 
 client.on('ready', () => {
     console.log('bot ready');
@@ -28,7 +39,7 @@ client.on('message', msg => {
     input = msg.content;
     if (!input.toLowerCase().startsWith(commandPrefix)) return
     if (msg.channel.type == "dm") {
-        if (msg.author.id != process.env.CONTROLLER_ID) {
+        if (!isWhiteListed(msg.author.id)) {
             msg.channel.send("dm commands not available");
             return
         }
