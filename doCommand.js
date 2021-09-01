@@ -35,12 +35,14 @@ const calendar = require('./commands/calendar.js')
 const resend = require('./commands/resend.js');
 
 const Discord = require('discord.js');
-bufferReply = new Discord.MessageEmbed().setDescription("retrieving data...")
+// bufferReply = new Discord.MessageEmbed().setDescription("retrieving data...")
 
 doCommand = (client, input, msg) => {
     input = input.slice(commandPrefix.length);
     input = input.split(" ");
     command = input[0].toLowerCase()
+
+    bufferReply = new Discord.MessageEmbed().setDescription("uwu~ /// " + msg.author.username + " u sussy little baka...\nT-T please be patient while i get the data (0w0)")
 
     if (!commandExists(command)) {
         reply = unknownCommand(commandPrefix)
