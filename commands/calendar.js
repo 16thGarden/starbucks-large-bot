@@ -74,20 +74,22 @@ function calendarMessage(event) {
 
     name = ""
     result = ""
-    var type, relative
+    var type, relative, absolute
     if (eventIn > event.interval - event.duration) {
         name += "Currently " 
         farIn = (now - (nextEvent - event.interval))
         endsIn = event.duration - farIn
         type = "ends"
         relative = "<t:" + ((now + endsIn) / 1000) + ":R>"
+        absolute = "<t:" + ((now + endsIn) / 1000) + ":F>"
     } else {
         type = "starts"
         relative = "<t:" + ((now + eventIn) / 1000) + ":R>"
+        absolute = "<t:" + ((now + eventIn) / 1000) + ":F>"
     }
     name += event.name
 
-    result += type + " " + relative
+    result += type + " " + relative + "\n" + absolute
 
     return {
         name: name,
