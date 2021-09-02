@@ -74,7 +74,7 @@ function calendarMessage(event) {
 
     name = ""
     result = ""
-    type, relative, absolute
+    var type, relative, absolute
     if (eventIn > event.interval - event.duration) {
         name += "Currently " 
         farIn = (now - (nextEvent - event.interval))
