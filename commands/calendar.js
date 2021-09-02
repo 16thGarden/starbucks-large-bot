@@ -1,5 +1,56 @@
 const Discord = require('discord.js');
 
+skyblockYear = 1000 * 60 * 60 * 124
+oneHour = 1000 * 60 * 60
+oneMinute = 1000 * 60
+
+jerryWorkshopOpensAnchor = 1630323300000 - skyblockYear
+jerryEventAnchor = jerryWorkshopOpensAnchor + (oneHour * 7 + oneMinute * 40) - skyblockYear
+newYearCelebrationAnchor = jerryEventAnchor + (oneHour * 1 + oneMinute * 40) - skyblockYear
+spookyFestivalAnchor = 1630654500000 - skyblockYear
+spookyFishingAnchor = spookyFestivalAnchor - (oneHour) - skyblockYear
+travellingZooAnchor = 1630248900000 - skyblockYear
+
+events = [
+    {
+        name: "Jerry's Workshop Opens",
+        anchor: jerryWorkshopOpensAnchor,
+        duration: oneHour * 10 + oneMinute * 20,
+        interval: oneHour * 124,
+    },
+    {
+        name: "Jerry Event",
+        anchor: jerryEventAnchor,
+        duration: oneHour * 1,
+        interval: oneHour * 124,
+    },
+    {
+        name: "New Year Celebration",
+        anchor: newYearCelebrationAnchor,
+        duration: oneHour * 1,
+        interval: oneHour * 124,
+    },
+    {
+        name: "Spooky Festival",
+        anchor: spookyFestivalAnchor,
+        duration: oneHour * 1,
+        interval: oneHour * 124,
+    },
+    {
+        name: "Spooky Fishing",
+        anchor: spookyFishingAnchor,
+        duration: oneHour * 3,
+        interval: oneHour * 124,
+    },
+    {
+        name: "Travelling Zoo",
+        anchor: travellingZooAnchor,
+        duration: oneHour * 1,
+        interval: oneHour * 62,
+    }
+
+]
+
 function unixEpochToString(n) {
     dayLength = 1000 * 60 * 60 * 24
     hourLength = 1000 * 60 * 60
@@ -14,90 +65,6 @@ function unixEpochToString(n) {
     return days + "d " + hours + "h " + minutes + "m"
 }
 
-function prettyDate(epoch, dateFormat){
-	//TODO: add args validations here in future..
-	var shortMonths = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
-	var longMonths  = 'January_Febrary_March_April_May_June_July_August_September_Octeber_November_December'.split('_');
-	
-	var shortDays = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
-	var longDays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
-	
-	var _df 	= dateFormat;
-	
-	// convert epoch date to date object
-	var 	dt 	= new Date(epoch);
-	
-	var	date	= dt.getDate(),
-		month	= dt.getMonth(),
-		year	= dt.getFullYear(),
-		day 	= dt.getDay(),
-		
-		hour	= dt.getHours(),
-		mins	= dt.getMinutes(),
-		secs	= dt.getSeconds();
-	
-	// year
-	if (_df && _df.indexOf('yyyy') != -1) {
-		_df = _df.replace('yyyy', year);
-	}
-	
-	// day of week in long format e.g. Monday
-	if (_df && _df.indexOf('DDDD') != -1) {
-		_df = _df.replace('DDDD', longDays[day]);
-	}
-	
-	// day of week in short format e.g. Mon
-	if (_df && _df.indexOf('DDD') != -1) {
-		_df = _df.replace('DDD', shortDays[day]);
-	}
-	
-	// date of the month
-	if (_df && _df.indexOf('dd') != -1) {
-		_df = _df.replace('dd', date < 10 ? ('0' + date) : date);
-	}
-	
-	// Month of the year in long format e.g. January
-	if (_df && _df.indexOf('MMMM') != -1) {
-		_df = _df.replace('MMMM', longMonths[month]);
-	}
-	
-	// Month of the year in short format e.g. Jan
-	if (_df && _df.indexOf('MMM') != -1) {
-		_df = _df.replace('MMM', shortMonths[month]);
-	}
-	
-	// Month of the year in numeric format e.g. 01
-	if (_df && _df.indexOf('MM') != -1) {
-		_df = _df.replace('MM', (month + 1) < 10 ? ('0' + (month + 1)) : (month + 1));
-	}
-	
-	// hours
-	if (_df && _df.indexOf('hh') != -1) {
-        if (_df && _df.indexOf('12') != -1) {
-            _df = _df.replace('12', hour >= 12 ? "pm" : "am");
-            hour %= 12
-        }
-        _df = _df.replace('hh', hour < 10 ? ('0' + hour) : hour);
-	}
-	
-	// minutes
-	if (_df && _df.indexOf('mm') != -1) {
-		_df = _df.replace('mm', mins < 10 ? ('0' + mins) : mins);
-	}
-	
-	// seconds
-	if (_df && _df.indexOf('ss') != -1) {
-		_df = _df.replace('ss', secs < 10 ? ('0' + secs) : secs);
-	}
-
-    // 12h/24h format
-    if (_df && _df.indexOf('24') != -1) {
-		_df = _df.replace('24', "");
-	}
-	
-	return _df;
-}
-
 function calendarMessage(event) {
     now = (new Date).getTime()
     nextEvent = event.anchor + (Math.floor((now - event.anchor) / event.interval) + 1) * event.interval
@@ -107,17 +74,22 @@ function calendarMessage(event) {
 
     name = ""
     result = ""
+    type, relative, absolute
     if (eventIn > event.interval - event.duration) {
         name += "Currently " 
         farIn = (now - (nextEvent - event.interval))
         endsIn = event.duration - farIn
-        //result += "ends in " + unixEpochToString(endsIn) + "\n" + prettyDate(now + endsIn, dateFormat)
-        result += "ends in " + unixEpochToString(endsIn) + "\n" + "<t:" + ((now + endsIn) / 1000) + ":F>"
+        type = "ends"
+        relative = "<t:" + ((now + endsIn) / 1000) + ":F>"
+        absolute = "<t:" + ((now + endsIn) / 1000) + ":R>"
     } else {
-        //result += "starts in " + unixEpochToString(eventIn) + "\n" + prettyDate(now + eventIn, dateFormat)
-        result += "starts in " + unixEpochToString(eventIn) + "\n" + "<t:" + ((now + eventIn) / 1000) + ":F>"
+        type = "starts"
+        relative = "<t:" + ((now + eventIn) / 1000) + ":F>"
+        absolute = "<t:" + ((now + eventIn) / 1000) + ":R>"
     }
     name += event.name
+
+    result += type + " in " + relative + "\n" + absolute
 
     return {
         name: name,
@@ -163,57 +135,6 @@ function sort(reply, sorts) {
 }
 
 module.exports = function() {
-    skyblockYear = 1000 * 60 * 60 * 124
-    oneHour = 1000 * 60 * 60
-    oneMinute = 1000 * 60
-
-    jerryWorkshopOpensAnchor = 1630323300000 - skyblockYear
-    jerryEventAnchor = jerryWorkshopOpensAnchor + (oneHour * 7 + oneMinute * 40) - skyblockYear
-    newYearCelebrationAnchor = jerryEventAnchor + (oneHour * 1 + oneMinute * 40) - skyblockYear
-    spookyFestivalAnchor = 1630654500000 - skyblockYear
-    spookyFishingAnchor = spookyFestivalAnchor - (oneHour) - skyblockYear
-    travellingZooAnchor = 1630248900000 - skyblockYear
-
-    events = [
-        {
-            name: "Jerry's Workshop Opens",
-            anchor: jerryWorkshopOpensAnchor,
-            duration: oneHour * 10 + oneMinute * 20,
-            interval: oneHour * 124,
-        },
-        {
-            name: "Jerry Event",
-            anchor: jerryEventAnchor,
-            duration: oneHour * 1,
-            interval: oneHour * 124,
-        },
-        {
-            name: "New Year Celebration",
-            anchor: newYearCelebrationAnchor,
-            duration: oneHour * 1,
-            interval: oneHour * 124,
-        },
-        {
-            name: "Spooky Festival",
-            anchor: spookyFestivalAnchor,
-            duration: oneHour * 1,
-            interval: oneHour * 124,
-        },
-        {
-            name: "Spooky Fishing",
-            anchor: spookyFishingAnchor,
-            duration: oneHour * 3,
-            interval: oneHour * 124,
-        },
-        {
-            name: "Travelling Zoo",
-            anchor: travellingZooAnchor,
-            duration: oneHour * 1,
-            interval: oneHour * 62,
-        }
-    
-    ]
-
     reply = []
     sorts = []
     events.forEach(event => {
