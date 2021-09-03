@@ -17,6 +17,7 @@ app.listen(port, function() {
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const whitelist = require('./whitelist.js')
+const doCommand = require('./doCommand.js')
 
 isWhiteListed = (id) => {
     for (var i = 0; i < whitelist.length; i++) {
@@ -28,8 +29,11 @@ isWhiteListed = (id) => {
     return false
 }
 
+client.user.setActivity("prefix (s.)");
 
-const doCommand = require('./doCommand.js')
+client.on('ready', () => {
+    console.log('bot ready');
+});
 
 client.on('message', msg => {
     if (msg.author.bot) return
@@ -43,12 +47,6 @@ client.on('message', msg => {
     }
 
     doCommand(client, input, msg)
-});
-
-client.user.setActivity("prefix (s.)");
-
-client.on('ready', () => {
-    console.log('bot ready');
 });
 
 client.login(process.env.BOT_TOKEN).then(() => {
