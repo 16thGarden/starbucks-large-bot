@@ -112,7 +112,7 @@ function when(event) {
         
         return endsIn
     } else {
-        return eventIn * 2
+        return eventIn * 100
     }
 }
 
