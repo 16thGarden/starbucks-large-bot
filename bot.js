@@ -29,10 +29,9 @@ isWhiteListed = (id) => {
     return false
 }
 
-client.user.setActivity("prefix (s.)");
-
 client.on('ready', () => {
     console.log('bot ready');
+    client.user.setActivity("prefix (s.)");
 });
 
 client.on('message', msg => {
