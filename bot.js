@@ -28,9 +28,6 @@ isWhiteListed = (id) => {
     return false
 }
 
-client.on('ready', () => {
-    console.log('bot ready');
-});
 
 const doCommand = require('./doCommand.js')
 
@@ -46,6 +43,12 @@ client.on('message', msg => {
     }
 
     doCommand(client, input, msg)
+});
+
+client.user.setActivity("prefix (s.)");
+
+client.on('ready', () => {
+    console.log('bot ready');
 });
 
 client.login(process.env.BOT_TOKEN).then(() => {
