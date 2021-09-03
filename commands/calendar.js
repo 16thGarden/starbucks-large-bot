@@ -51,20 +51,6 @@ events = [
 
 ]
 
-function unixEpochToString(n) {
-    dayLength = 1000 * 60 * 60 * 24
-    hourLength = 1000 * 60 * 60
-    minuteLength = 1000 * 60
-
-    days = Math.floor(n / dayLength)
-    n %= dayLength
-    hours = Math.floor(n / hourLength)
-    n %= hourLength
-    minutes = Math.floor(n / minuteLength)
-    n %= minuteLength
-    return days + "d " + hours + "h " + minutes + "m"
-}
-
 function calendarMessage(event) {
     now = (new Date).getTime()
     nextEvent = event.anchor + (Math.floor((now - event.anchor) / event.interval) + 1) * event.interval
@@ -99,20 +85,23 @@ function calendarMessage(event) {
 
 function when(event) {
     now = (new Date).getTime()
-    nextEvent = event.anchor
-    while(nextEvent <= now) {
-        nextEvent += event.interval
-    }
-
+    
+    nextEvent = event.anchor + (Math.floor((now - event.anchor) / event.interval) + 1) * event.interval
     eventIn = nextEvent - now
 
     if (eventIn > event.interval - event.duration) {
         farIn = (now - (nextEvent - event.interval))
         endsIn = event.duration - farIn
         
-        return endsIn
+        return {
+          time: endsIn,
+          type: "endsIn",
+        }
     } else {
-        return eventIn * 100
+        return {
+          time: eventIn * 100,
+          type: "eventIn",
+        }
     }
 }
 
@@ -137,13 +126,28 @@ function sort(reply, sorts) {
 module.exports = function() {
     reply = []
     sorts = []
+    eventsActive = 0
     events.forEach(event => {
         reply.push(calendarMessage(event))
-        sorts.push(when(event))
+        temp = when(event)
+        sorts.push(temp.time)
+
+        if (temp.type == "endIn") {
+            eventsActive++
+        }
     })
 
+    title = "Calendar"
+    if (eventsActive > 0) {
+        title += "Event"
+            if (eventsActive == 1) {
+                title += "s"
+            }
+        
+        title += " Active!"
+    }
     return new Discord.MessageEmbed()
-    .setColor("0000FF")
-    .setTitle("Calendar")
+    .setColor(eventsActive > 1 ? "00FFFF" : "0000FF")
+    .setTitle(title)
     .addFields(sort(reply, sorts))
 }
