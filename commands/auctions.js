@@ -57,7 +57,7 @@ const getAuctions = (ign) => {
                         replyValueBIN += "expired."
                     } else {
                         if (auction.bids.length == 0) {
-                            replyValueBIN += "ends" + "<t:" + (auction.end / 1000) + ":R>"
+                            replyValueBIN += "ends" + "<t:" + Math.floor(auction.end / 1000) + ":R>"
                         }
                     }
                     replyValueBIN += "\n"
@@ -80,7 +80,7 @@ const getAuctions = (ign) => {
                     if (milliseconds >= auction.end) {
                         replyValueAUCTIONS += "ended."
                     } else if (milliseconds < auction.end) {
-                        replyValueAUCTIONS += "ends" + "<t:" + (auction.end / 1000) + ":R>"
+                        replyValueAUCTIONS += "ends" + "<t:" + Math.floor(auction.end / 1000) + ":R>"
                     }
                     replyValueAUCTIONS += "\n"
 
