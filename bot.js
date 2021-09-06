@@ -20,6 +20,8 @@ app.engine("hbs", exphandle({
       allowProtoMethodsByDefault: true,
     },
 }))
+app.set("view engine", "hbs")
+app.use(express.static("public"))
 
 app.listen(port, function() {
     wakeUpDyno(dynoUrl);
