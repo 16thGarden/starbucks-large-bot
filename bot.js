@@ -8,9 +8,26 @@ const port = process.env.PORT || 5000;
 const dynoUrl = process.env.DYNO_URL;
 const app = express();
 
+app.engine("hbs", exphandle({
+    extname: "hbs",
+    defaultView: "main",
+    layoutsDir: path.join(__dirname, "/views/layouts"), // Layouts folder
+    partialsDir: path.join(__dirname, "/views/partials"), // Partials folder
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+    },
+}))
+
 app.listen(port, function() {
     wakeUpDyno(dynoUrl);
 });
+
+app.get("/", function(req, res) {
+    res.render("home", {
+        message: "gottem"
+    });
+})
 
 //===================================================================
 
