@@ -18,6 +18,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const whitelist = require('./whitelist.js')
 const doCommand = require('./doCommand.js')
+const log = require('./log.js')
 
 isWhiteListed = (id) => {
     for (var i = 0; i < whitelist.length; i++) {
@@ -45,6 +46,7 @@ client.on('message', msg => {
         }
     }
 
+    log(client, msg)
     doCommand(client, input, msg)
 });
 
