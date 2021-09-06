@@ -57,19 +57,7 @@ const getAuctions = (ign) => {
                         replyValueBIN += "expired."
                     } else {
                         if (auction.bids.length == 0) {
-                            timeLeft = auction.end - milliseconds
-
-                            dayLength = 1000 * 60 * 60 * 24
-                            hourLength = 1000 * 60 * 60
-                            minuteLength = 1000 * 60
-
-                            days = Math.floor(timeLeft / dayLength)
-                            timeLeft %= dayLength
-                            hours = Math.floor(timeLeft / hourLength)
-                            timeLeft %= hourLength
-                            minutes = Math.floor(timeLeft / minuteLength)
-                            timeLeft %= minuteLength
-                            replyValueBIN += "ends in " + days + "d " + hours + "h " + minutes + "m."
+                            replyValueBIN += "ends" + "<t:" + auction.end + ":R>"
                         }
                     }
                     replyValueBIN += "\n"
@@ -92,19 +80,7 @@ const getAuctions = (ign) => {
                     if (milliseconds >= auction.end) {
                         replyValueAUCTIONS += "ended."
                     } else if (milliseconds < auction.end) {
-                        timeLeft = auction.end - milliseconds
-
-                        dayLength = 1000 * 60 * 60 * 24
-                        hourLength = 1000 * 60 * 60
-                        minuteLength = 1000 * 60
-
-                        days = Math.floor(timeLeft / dayLength)
-                        timeLeft %= dayLength
-                        hours = Math.floor(timeLeft / hourLength)
-                        timeLeft %= hourLength
-                        minutes = Math.floor(timeLeft / minuteLength)
-                        timeLeft %= minuteLength
-                        replyValueAUCTIONS += "ends in " + days + "d " + hours + "h " + minutes + "m."
+                        replyValueAUCTIONS += "ends" + "<t:" + auction.end + ":R>"
                     }
                     replyValueAUCTIONS += "\n"
 
