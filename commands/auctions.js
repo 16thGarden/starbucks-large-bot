@@ -47,7 +47,7 @@ const getAuctions = (ign) => {
                 bins.forEach(auction => {
                     var name = auction.item_name
                     if (name == "Enchanted Book") {
-                        name = auction.item_lore.split("\n")[0].slice(2);
+                        name = auction.item_lore.split("\n")[0].replace(/\u00A7[0-9A-FK-OR]/ig,'');
                     }
 
                     var cost = auction.starting_bid.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -83,7 +83,7 @@ const getAuctions = (ign) => {
                 notbins.forEach(auction => {
                     var name = auction.item_name
                     if (name == "Enchanted Book") {
-                        name = auction.item_lore.split("\n")[0].slice(2);
+                        name = auction.item_lore.split("\n")[0].replace(/\u00A7[0-9A-FK-OR]/ig,'');
                     }
 
                     var cost = auction.highest_bid_amount.toString().split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
