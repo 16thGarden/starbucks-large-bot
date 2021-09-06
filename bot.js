@@ -40,7 +40,7 @@ client.on('message', msg => {
     if (!input.toLowerCase().startsWith(commandPrefix)) return
     if (msg.channel.type == "dm") {
         if (!isWhiteListed(msg.author.id)) {
-            msg.channel.send("dm commands not available");
+            //msg.channel.send("dm commands not available");
             return
         }
     }
