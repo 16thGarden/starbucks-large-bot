@@ -29,7 +29,7 @@ app.listen(port, function() {
 
 app.get("/", function(req, res) {
     res.render("home", {
-        message: "gottem"
+        invite_url: "https://discord.com/oauth2/authorize?client_id=824468040745615401&scope=bot"
     });
 })
 
