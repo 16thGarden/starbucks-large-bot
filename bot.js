@@ -5,6 +5,7 @@ const wakeUpDyno = require('./keepAwake.js')
 
 const express = require("express");
 const exphandle = require("express-handlebars")
+const path = require("path")
 const port = process.env.PORT || 5000;
 const dynoUrl = process.env.DYNO_URL;
 const app = express();
