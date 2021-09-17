@@ -32,9 +32,10 @@ const getStatus = (ign) => {
                 resolve(reply)
             }
 
-            fetch(buildPath("/status", [["uuid", result.id]]))
+            fetch(buildPath("status", [["uuid", result.id]]))
             .then(res => res.json())
             .then(json => {
+                console.log(json)
                 online = json.session.online
                 gametype = json.session.gameType
                 fetch("https://sky.shiiyu.moe/api/v2/profile/" + ign)
