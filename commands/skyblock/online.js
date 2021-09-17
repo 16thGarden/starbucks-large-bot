@@ -21,7 +21,7 @@ const getStatus = (ign) => {
 
     return new Promise((resolve, reject) => {
         ignToUuid(ign).then(result => {
-            if (result.arror) {
+            if (result.error) {
                 replyTitle = "Player not Found!";
                 replyBody = "Player " + ign + " was not found!";
 
