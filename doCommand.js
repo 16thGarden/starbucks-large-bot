@@ -26,13 +26,16 @@ function commandExists(command) {
     return false
 }
 
+// general commands
 const unknownCommand = require('./commands/unknownCommand.js')
 const help = require('./commands/help.js')
-const online = require('./commands/online.js')
-const auctions = require('./commands/auctions.js')
-const secrets = require('./commands/secrets.js')
-const calendar = require('./commands/calendar.js')
 const resend = require('./commands/resend.js');
+
+// skyblock commands
+const online = require('./commands/skyblock/online.js')
+const auctions = require('./commands/skyblock/auctions.js')
+const secrets = require('./commands/skyblock/secrets.js')
+const calendar = require('./commands/skyblock/calendar.js')
 
 const Discord = require('discord.js');
 // bufferReply = new Discord.MessageEmbed().setDescription("retrieving data...")

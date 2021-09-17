@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 // keep app awake module
-const wakeUpDyno = require('./keepAwake.js')
+const wakeUpDyno = require('./functions/keepAwake.js')
 
 const express = require("express");
 const exphandle = require("express-handlebars")
@@ -39,7 +39,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const whitelist = require('./whitelist.js')
 const doCommand = require('./doCommand.js')
-const log = require('./log.js')
+const log = require('./functions/log.js')
 
 isWhiteListed = (id) => {
     for (var i = 0; i < whitelist.length; i++) {

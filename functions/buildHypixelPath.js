@@ -1,9 +1,9 @@
 const hypixelapi = "https://api.hypixel.net";
 require('dotenv').config()
 
-module.exports = (host, path, params) => {
+module.exports = (path, params) => {
     out = "";
-    out += host;
+    out += hypixelapi;
     out += "/";
     out += path
     

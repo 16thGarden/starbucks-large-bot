@@ -1,7 +1,9 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 require('dotenv').config()
-const KEY = process.env.HYPIXEL_API_KEY
+
+const ignToUuid = require('../../functions/ignToUuid.js')
+const buildPath = require('../../functions/buildHypixelPath.js')
 
 const getStatus = (ign) => {
     if (ign === undefined) {
@@ -18,10 +20,19 @@ const getStatus = (ign) => {
     }
 
     return new Promise((resolve, reject) => {
-        fetch("https://minecraft-api.com/api/uuid/" + ign + "/json")
-        .then(res => res.json())
-        .then(json => {
-            fetch("https://api.hypixel.net/status?key=" + KEY + "&uuid=" + json.uuid)
+        ignToUuid(ign).then(result => {
+            if (result.arror) {
+                replyTitle = "Player not Found!";
+                replyBody = "Player " + ign + " was not found!";
+
+                reply = new Discord.MessageEmbed()
+                .setTitle(replyTitle)
+                .setDescription(replyBody);
+
+                resolve(reply)
+            }
+
+            fetch(buildPath("/status", [["uuid", result.id]]))
             .then(res => res.json())
             .then(json => {
                 online = json.session.online
@@ -43,22 +54,7 @@ const getStatus = (ign) => {
                                 now = (new Date).getTime()
                                 lastSeen = json.profiles[cur_profile].last_save
 
-                                ago = now - lastSeen
-                                
-                                dayLength = 1000 * 60 * 60 * 24
-                                hourLength = 1000 * 60 * 60
-                                minuteLength = 1000 * 60
-
-                                days = Math.floor(ago / dayLength)
-                                ago %= dayLength
-                                hours = Math.floor(ago / hourLength)
-                                ago %= hourLength
-                                minutes = Math.floor(ago / minuteLength)
-                                ago %= minuteLength
-                                agoString = days + "d " + hours + "h " + minutes + "m ago"
-
-
-                                replyBody = [{name: "OFFLINE", value: "last seen " + agoString}]
+                                replyBody = [{name: "OFFLINE", value: "last seen <t:" + Math.floor(lastSeen / 1000) + ":R>"}]
                             }
                         });
                     }
@@ -72,17 +68,7 @@ const getStatus = (ign) => {
 
                     resolve(reply)
                 })
-            });
-        })
-        .catch((error) => {
-            replyTitle = "Player not Found!";
-            replyBody = "Player " + ign + " was not found!";
-
-            reply = new Discord.MessageEmbed()
-            .setTitle(replyTitle)
-            .setDescription(replyBody);
-
-            resolve(reply)
+            })
         })
     })
 }

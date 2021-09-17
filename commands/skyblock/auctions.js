@@ -2,8 +2,8 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 require('dotenv').config()
 
-const buildPath = require('../buildHypixelPath.js')
-const hypixelapi = "https://api.hypixel.net"
+const ignToUuid = require('../../functions/ignToUuid.js')
+const buildPath = require('../../functions/buildHypixelPath.js')
 
 const getAuctions = (ign) => {
     if (ign === undefined) {
@@ -20,10 +20,19 @@ const getAuctions = (ign) => {
     }
 
     return new Promise((resolve, reject) => {
-        fetch(buildPath("https://minecraft-api.com", "api/uuid/" + ign + "/json", []))
-        .then(res => res.json())
-        .then(json => {
-            fetch(buildPath(hypixelapi, "skyblock/auction", [["player", json.uuid]]))
+        ignToUuid(ign).then(result => {
+            if (result.error) {
+                replyTitle = "Player not Found!";
+                replyBody = "Player " + ign + " was not found!";
+
+                reply = new Discord.MessageEmbed()
+                .setTitle(replyTitle)
+                .setDescription(replyBody)
+
+                resolve(reply)
+            }
+
+            fetch(buildPath("skyblock/auction", [["player", result.id]]))
             .then(res => res.json())
             .then(json => {
                 bins = []
@@ -37,7 +46,7 @@ const getAuctions = (ign) => {
                     }
                 });
 
-                replyTitle = "Player " + ign + " Auctions"
+                replyTitle = "Player " + json.name + " Auctions"
                 replyBody = []
                 unclaimedCoins = 0
 
@@ -131,17 +140,6 @@ const getAuctions = (ign) => {
                 
                 resolve(reply)
             })
-        })
-        .catch((error) => {
-            console.log(error)
-            replyTitle = "Player not Found!";
-            replyBody = "Player " + ign + " was not found!";
-
-            reply = new Discord.MessageEmbed()
-            .setTitle(replyTitle)
-            .setDescription(replyBody)
-
-            resolve(reply)
         })
     })
 }

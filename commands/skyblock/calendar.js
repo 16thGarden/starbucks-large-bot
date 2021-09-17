@@ -56,8 +56,6 @@ function calendarMessage(event) {
     nextEvent = event.anchor + (Math.floor((now - event.anchor) / event.interval) + 1) * event.interval
     eventIn = nextEvent - now
 
-    dateFormat = "DDD MMM dd hh:mm:ss 12"
-
     name = ""
     result = ""
     var type, relative, absolute
