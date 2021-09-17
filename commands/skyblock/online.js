@@ -41,7 +41,7 @@ const getStatus = (ign) => {
                 fetch("https://sky.shiiyu.moe/api/v2/profile/" + ign)
                 .then(res => res.json())
                 .then(json => {
-                    replyTitle = "Player " + ign + " Status";
+                    replyTitle = "Player " + result.name + " Status";
 
                     if (online) {
                         replyBody = [{name: "ONLINE", value: "playing " + gametype}]
@@ -55,7 +55,21 @@ const getStatus = (ign) => {
                                 now = (new Date).getTime()
                                 lastSeen = json.profiles[cur_profile].last_save
 
-                                replyBody = [{name: "OFFLINE", value: "last seen <t:" + Math.floor(lastSeen / 1000) + ":R>"}]
+                                ago = now - lastSeen
+
+                                dayLength = 1000 * 60 * 60 * 24
+                                hourLength = 1000 * 60 * 60
+                                minuteLength = 1000 * 60
+
+                                days = Math.floor(ago / dayLength)
+                                ago %= dayLength
+                                hours = Math.floor(ago / hourLength)
+                                ago %= hourLength
+                                minutes = Math.floor(ago / minuteLength)
+                                ago %= minuteLength
+                                agoString = days + "d " + hours + "h " + minutes + "m"
+
+                                replyBody = [{name: "OFFLINE", value: "last seen about " + agoString + " ago\n<t:" + Math.floor(lastSeen / 1000) + ":F>"}]
                             }
                         });
                     }

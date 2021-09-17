@@ -46,7 +46,7 @@ const getAuctions = (ign) => {
                     }
                 });
 
-                replyTitle = "Player " + json.name + " Auctions"
+                replyTitle = "Player " + result.name + " Auctions"
                 replyBody = []
                 unclaimedCoins = 0
 
