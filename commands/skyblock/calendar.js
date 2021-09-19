@@ -42,13 +42,6 @@ events = [
         duration: oneHour * 3,
         interval: oneHour * 124,
     },
-    {
-        name: "Travelling Zoo",
-        anchor: travellingZooAnchor,
-        duration: oneHour * 1,
-        interval: oneHour * 62,
-    }
-
 ]
 
 function calendarMessage(event) {
