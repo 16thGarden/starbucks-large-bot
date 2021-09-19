@@ -145,7 +145,7 @@ module.exports = function() {
         title += " Active!"
     }
     return new Discord.MessageEmbed()
-    .setColor(eventsActive > 1 ? "00FFFF" : "0000FF")
+    .setColor(eventsActive > 0 ? "00FFFF" : "0000FF")
     .setTitle(title)
     .addFields(sort(reply, sorts))
 }
