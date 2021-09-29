@@ -5,6 +5,7 @@ commands = [
     "auctions", "a",
     "secrets", "s",
     "calendar", "c",
+    "weight", "w",
     "resend", "r",
 ]
 commandDescriptions = [
@@ -13,6 +14,7 @@ commandDescriptions = [
     "show pending auctions of a player",
     "show total secret count of a player",
     "show current and upcoming events",
+    "get the Senither weight of a player",
     "resend the last command sent in this channel within 100 messages",
 ]
 
@@ -36,6 +38,7 @@ const online = require('./commands/skyblock/online.js')
 const auctions = require('./commands/skyblock/auctions.js')
 const secrets = require('./commands/skyblock/secrets.js')
 const calendar = require('./commands/skyblock/calendar.js')
+const weight = require('./commands/skyblock/weight.js')
 
 const Discord = require('discord.js');
 // bufferReply = new Discord.MessageEmbed().setDescription("retrieving data...")
@@ -74,6 +77,12 @@ doCommand = (client, input, msg) => {
     } else if (command == commands[8] || command == commands[9]) {
         msg.channel.send(calendar())
     } else if (command == commands[10] || command == commands[11]) {
+        msg.channel.send(bufferReply).then(sentMessage => {
+            weight(input[1]).then(result => {
+                sentMessage.edit(result)
+            })
+        })
+    } else if (command == commands[12] || command == commands[13]) {
         resend(client, msg, commandPrefix).then(newInput => {
             if (newInput == null) {
                 msg.channel.send(new Discord.MessageEmbed().setTitle("No commands found").setDescription("none found within 100 messages"))
