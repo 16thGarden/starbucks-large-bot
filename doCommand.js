@@ -41,54 +41,57 @@ const calendar = require('./commands/skyblock/calendar.js')
 const weight = require('./commands/skyblock/weight.js')
 
 const Discord = require('discord.js');
+require('discord-inline-reply')
 // bufferReply = new Discord.MessageEmbed().setDescription("retrieving data...")
 
 doCommand = (client, input, msg) => {
     input = input.slice(commandPrefix.length);
-    input = input.split(" ");
+    input = input.split(/\s+/);
     command = input[0].toLowerCase()
 
     bufferReply = new Discord.MessageEmbed().setDescription("uwu~ /// " + msg.author.username + " u sussy little baka...\nT-T please be patient while i get the data (0w0)")
-
+    
     if (!commandExists(command)) {
         reply = unknownCommand(commandPrefix)
-        msg.channel.send(reply)
+        msg.lineReplyNoMention(reply)
     } else if (command == commands[0] || command == commands[1]) {
         reply = help(commandPrefix, commands, commandDescriptions)
-        msg.channel.send(reply)
+        msg.lineReplyNoMention(reply)
     } else if (command == commands[2] || command == commands[3]) {
-        msg.channel.send(bufferReply).then(sentMessage => {
+        msg.lineReplyNoMention(bufferReply).then(sentMessage => {
             online(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
     } else if (command == commands[4] || command == commands[5]) {
-        msg.channel.send(bufferReply).then(sentMessage => {
+        msg.lineReplyNoMention(bufferReply).then(sentMessage => {
             auctions(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
     } else if (command == commands[6] || command == commands[7]) {
-        msg.channel.send(bufferReply).then(sentMessage => {
+        msg.lineReplyNoMention(bufferReply).then(sentMessage => {
             secrets(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
     } else if (command == commands[8] || command == commands[9]) {
-        msg.channel.send(calendar())
+        msg.lineReplyNoMention(calendar())
     } else if (command == commands[10] || command == commands[11]) {
-        msg.channel.send(bufferReply).then(sentMessage => {
+        msg.lineReplyNoMention(bufferReply).then(sentMessage => {
             weight(input[1]).then(result => {
                 sentMessage.edit(result)
             })
         })
     } else if (command == commands[12] || command == commands[13]) {
-        resend(client, msg, commandPrefix).then(newInput => {
+        resend(client, msg, commandPrefix).then(result => {
+            newInput = result.command
+            originalMessage = result.originalMessage
             if (newInput == null) {
-                msg.channel.send(new Discord.MessageEmbed().setTitle("No commands found").setDescription("none found within 100 messages"))
+                msg.lineReplyNoMention(new Discord.MessageEmbed().setTitle("No commands found").setDescription("none found within 100 messages"))
             } else {
-                msg.channel.send(new Discord.MessageEmbed().setTitle("Resending command").setDescription(newInput))
-                doCommand(client, newInput.toString(), msg)
+                msg.lineReplyNoMention(new Discord.MessageEmbed().setTitle("Resending command").setDescription(newInput))
+                doCommand(client, newInput.toString(), originalMessage)
             }
         })
     }

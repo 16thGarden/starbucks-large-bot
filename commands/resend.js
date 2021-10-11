@@ -7,7 +7,10 @@ const getLastCommand = (client, msg, commandPrefix) => {
                 command = message.content.toLowerCase()
                 if (!command.startsWith("s.r") && !command.startsWith("s.resend")) {
                     if (command.startsWith(commandPrefix)) {
-                        resolve(command)
+                        resolve({
+                            originalMessage: message,
+                            command: command
+                        })
                     }
                 }
             })
